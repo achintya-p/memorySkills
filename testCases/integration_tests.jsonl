@@ -1,0 +1,5 @@
+{"id": "int_001", "name": "Agent with semantic memory", "prompt": "What is the model name?", "setup": "inject semantic memory with model=gpt-4o-mini", "expected_contains": "gpt-4o-mini", "description": "Agent should retrieve and use semantic memory"}
+{"id": "int_002", "name": "Agent with episodic memory", "prompt": "What did we do yesterday?", "setup": "inject episodic memory: user asked about ML", "expected_contains": ["yesterday", "ML"], "description": "Agent should reference episodic events"}
+{"id": "int_003", "name": "Agent applies procedural", "prompt": "Extract valid JSON from: {broken json", "setup": "inject procedural: use regex fallback", "expected_contains": "regex", "description": "Agent should follow procedural rules"}
+{"id": "int_004", "name": "Memory isolation", "prompt": "retrieve all memories", "setup": "create semantic + episodic + procedural", "expected_count": 3, "description": "All memory types should coexist without collision"}
+{"id": "int_005", "name": "Memory observability", "test": "check_log_after_writes", "expected_log_entries": ["write", "write", "write", "retrieve"], "description": "All actions should be logged for auditing"}

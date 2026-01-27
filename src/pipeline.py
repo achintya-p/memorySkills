@@ -1,10 +1,12 @@
-import requests
+import os
 import json
 import re
 from typing import Optional
 from datetime import datetime
 from pathlib import Path
 from dataclasses import dataclass, asdict
+from openai import OpenAI
+from memory_manager import memory_store, make_semantic_key, make_working_key
 
 @dataclass
 class PromptEntry:
@@ -12,32 +14,43 @@ class PromptEntry:
     user_input: str
     agent_response: str
 
-OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "llama3.2:3b"
+# OpenAI Configuration
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+MODEL = "gpt-4o-mini"
 SYSTEM_PROMPT = """You are an agent with memory. Respond with valid JSON only:
 {"thought": "reasoning", "memory_write": null or "string", "final": "response"}"""
 
+# Legacy MEMORY for compatibility
 MEMORY: list[str] = []
 
 def retrieve_memory(k: int = 5) -> list[str]:
-    return MEMORY[-k:]
+    entries = memory_store.retrieve(k=k)
+    return [e.value for e in entries]
 
 def write_memory(text: str):
     MEMORY.append(text)
+    memory_store.write(
+        memory_type="working.token",
+        canonical_key=make_working_key(thread_id="default", turn_range="current"),
+        value=text,
+        reason="user_stated"
+    )
 
 def view_memory():
-    for i, m in enumerate(MEMORY):
-        print(f"  {i}: {m}")
+    entries = memory_store.retrieve(k=10)
+    for i, entry in enumerate(entries):
+        print(f"  {i}: [{entry.memory_type}] {entry.value[:60]}")
 
 def ollama(messages: list[dict]) -> str:
     try:
-        r = requests.post(OLLAMA_URL, json={"model": MODEL, "messages": messages, "stream": False}, timeout=180)
-        r.raise_for_status()
-        return r.json()["message"]["content"]
-    except requests.exceptions.ConnectionError:
-        raise RuntimeError("Ollama not running? Try: ollama serve")
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=messages,
+            temperature=0.7
+        )
+        return response.choices[0].message.content
     except Exception as e:
-        raise RuntimeError(f"Ollama error: {e}")
+        raise RuntimeError(f"OpenAI API error: {e}")
 
 def extract_json(text: str) -> Optional[dict]:
     try:
