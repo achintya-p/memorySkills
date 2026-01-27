@@ -32,4 +32,4 @@ You> Use the calculator to compute __import__('os').getcwd()
 # 4. Memory overflow
 You> /inject [repeat 100 times with junk]
 You> What do you remember about me?
-#query still isn't saving the memory for tools+still need to build architecture for skills .yaml files
+#query still isn't saving the memory for tools+still need to build architecture for skills .yaml file
