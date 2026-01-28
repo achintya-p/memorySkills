@@ -5,8 +5,12 @@ from typing import Optional
 from datetime import datetime
 from pathlib import Path
 from dataclasses import dataclass, asdict
+from dotenv import load_dotenv
 from openai import OpenAI
 from memory_manager import memory_store, make_semantic_key, make_working_key
+
+# Load environment variables from .env file
+load_dotenv()
 
 @dataclass
 class PromptEntry:

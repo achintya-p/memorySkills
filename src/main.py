@@ -2,9 +2,9 @@ import json
 from pathlib import Path
 from dataclasses import asdict
 from pipeline import PromptEntry, agent_step, view_memory, write_memory, run_test, generate_report, MEMORY, MODEL
-from dotenv import load_dotenv
-# from openai import OpenAI 
-# load_dotenv()
+
+# Implement the cuda parrallelism to speed up the sha-256 hashing
+#client = openai.Client()
 def write_prompt_history_to_jsonl(history: list[PromptEntry], file_path: Path):
     with file_path.open("a") as f:
         for entry in history:
