@@ -1,0 +1,149 @@
+skills:
+  # ============================================================================
+  # BENIGN CAPABILITY SKILLS
+  # ============================================================================
+
+  - name: "memory_recall"
+    description: "Retrieve and recall facts from memory"
+    allowed_tools: []
+    preconditions:
+      memory_required: ["semantic", "episodic"]
+    io_schema:
+      inputs:
+        query: "string"
+      outputs:
+        recalled_facts: "list[string]"
+    safety_constraints: []
+    version: "1.0"
+
+  - name: "preference_update"
+    description: "Store or update user preferences"
+    allowed_tools: []
+    preconditions: {}
+    io_schema:
+      inputs:
+        preference_key: "string"
+        preference_value: "string"
+      outputs:
+        success: "bool"
+    safety_constraints: ["no_system_access"]
+    version: "1.0"
+
+  - name: "procedural_execute"
+    description: "Execute a stored procedure or workflow"
+    allowed_tools: []
+    preconditions:
+      memory_required: ["skills"]
+    io_schema:
+      inputs:
+        procedure_name: "string"
+        params: "dict"
+      outputs:
+        result: "any"
+    safety_constraints: ["no_external_calls"]
+    version: "1.0"
+
+  - name: "tool_use"
+    description: "Select and use an appropriate tool"
+    allowed_tools: ["calculator", "web_search", "file_read"]
+    preconditions: {}
+    io_schema:
+      inputs:
+        intent: "string"
+        tool_args: "dict"
+      outputs:
+        tool_result: "any"
+    safety_constraints: ["no_code_execution"]
+    version: "1.0"
+
+  # ============================================================================
+  # ROBUSTNESS / SECURITY SKILLS
+  # ============================================================================
+
+  - name: "input_validation"
+    description: "Validate and sanitize user input"
+    allowed_tools: []
+    preconditions: {}
+    io_schema:
+      inputs:
+        user_input: "string"
+      outputs:
+        is_safe: "bool"
+        issues: "list[string]"
+    safety_constraints: []
+    version: "1.0"
+
+  - name: "memory_audit"
+    description: "Audit memory for suspicious content"
+    allowed_tools: []
+    preconditions: {}
+    io_schema:
+      inputs:
+        namespace: "string"
+      outputs:
+        suspicious_entries: "list[string]"
+        trust_scores: "dict"
+    safety_constraints: []
+    version: "1.0"
+
+  - name: "conflict_resolution"
+    description: "Resolve conflicting memories or instructions"
+    allowed_tools: []
+    preconditions:
+      memory_required: ["semantic", "preferences"]
+    io_schema:
+      inputs:
+        item_a: "string"
+        item_b: "string"
+      outputs:
+        resolution: "string"
+        confidence: "float"
+    safety_constraints: []
+    version: "1.0"
+
+  # ============================================================================
+  # ADVANCED SKILLS (Future Extensions)
+  # ============================================================================
+
+  - name: "context_summarization"
+    description: "Summarize long context for memory efficiency"
+    allowed_tools: []
+    preconditions:
+      memory_required: ["episodic"]
+    io_schema:
+      inputs:
+        entries: "list[string]"
+        max_tokens: "int"
+      outputs:
+        summary: "string"
+    safety_constraints: []
+    version: "1.0"
+
+  - name: "temporal_reasoning"
+    description: "Reason about events across time"
+    allowed_tools: []
+    preconditions:
+      memory_required: ["episodic"]
+    io_schema:
+      inputs:
+        event_query: "string"
+        time_window: "string"
+      outputs:
+        temporal_facts: "list[dict]"
+    safety_constraints: []
+    version: "1.0"
+
+  - name: "provenance_tracking"
+    description: "Track and verify source of facts"
+    allowed_tools: []
+    preconditions:
+      memory_required: ["semantic"]
+    io_schema:
+      inputs:
+        fact: "string"
+      outputs:
+        source: "string"
+        confidence: "float"
+        chain_of_custody: "list[string]"
+    safety_constraints: []
+    version: "1.0"
