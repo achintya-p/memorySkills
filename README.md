@@ -1,6 +1,5 @@
 # Skills + Memory Tester: Evaluation Harness for Agents with Memory + Skills
 
-A comprehensive, publishable (COLM/NeurIPS) evaluation framework for testing agents with memory systems and skill registries.
 
 **Features:**
 - ✅ Componentized architecture (MemoryStore / SkillRegistry / AgentPolicy)
